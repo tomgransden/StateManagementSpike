@@ -1,5 +1,5 @@
 # StateManagementSpike
-A starter project for state management
+A starter project for state management - it has been created with Typescript, React Navigation and the new React Native architecture enabled.
 
 ## Building the project
 `yarn install`
