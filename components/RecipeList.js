@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {getPublicRecipes} from '../api/publicRecipes';
+import {getPublicRecipes} from '../api/publicRecipes.';
 
 const screenWidth = Dimensions.get('screen').width;
 

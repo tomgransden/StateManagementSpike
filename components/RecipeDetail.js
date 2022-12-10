@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {ActivityIndicator, View, Text, Dimensions, Image} from 'react-native';
-import {getPublicRecipeDetail} from '../api/publicRecipes';
+import {getPublicRecipeDetail} from '../api/publicRecipes.';
 
 const screenWidth = Dimensions.get('screen').width;
 
