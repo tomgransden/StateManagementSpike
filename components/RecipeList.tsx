@@ -17,7 +17,7 @@ import type {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {RootStackParamList} from '../App';
+import {RootStackParamList} from '../types/navigationTypes';
 
 type RecipeListProps = NativeStackScreenProps<
   RootStackParamList,
@@ -81,8 +81,9 @@ const style = StyleSheet.create<RecipeListStyle>({
     left: 0,
     right: 0,
     backgroundColor: 'rgba(0,0,0,0.7)',
-    height: 60,
+    minHeight: 60,
     justifyContent: 'center',
+    paddingHorizontal: 12,
   },
   text: {color: '#fffefe', textAlign: 'center', fontSize: 24},
 });

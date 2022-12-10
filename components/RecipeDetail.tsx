@@ -13,7 +13,7 @@ import {
 import {getPublicRecipeDetail} from '../api/publicRecipes.';
 import {PublicRecipeDetailed} from '../types/publicRecipeTypes';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../App';
+import {RootStackParamList} from '../types/navigationTypes';
 
 const screenWidth = Dimensions.get('screen').width;
 

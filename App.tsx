@@ -13,11 +13,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import RecipeList from './components/RecipeList';
 import RecipeDetail from './components/RecipeDetail';
-
-export type RootStackParamList = {
-  'Slimming World Recipes': undefined;
-  'Recipe Detail': {slug: string};
-};
+import {RootStackParamList} from './types/navigationTypes';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
