@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   ActivityIndicator,
   View,
@@ -9,6 +9,7 @@ import {
   ViewStyle,
   ImageStyle,
   TextStyle,
+  Pressable,
 } from 'react-native';
 import {getPublicRecipeDetail} from '../api/publicRecipes.';
 import {PublicRecipeDetailed} from '../types/publicRecipeTypes';
@@ -20,20 +21,44 @@ const screenWidth = Dimensions.get('screen').width;
 type Props = NativeStackScreenProps<RootStackParamList, 'Recipe Detail'>;
 
 const RecipeDetail = ({route}: Props): JSX.Element => {
-  console.log(route.params);
-
   const [recipe, setRecipe] = useState<PublicRecipeDetailed | null>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
+
+  const loadRecipeDetail = useCallback(
+    (slug: string) => {
+      getPublicRecipeDetail(slug)
+        .then(res => {
+          setRecipe(res);
+        })
+        .catch(() => setError(true))
+        .finally(() => {
+          setIsLoading(false);
+        });
+    },
+    [getPublicRecipeDetail],
+  );
 
   useEffect(() => {
     if (route.params.slug) {
-      getPublicRecipeDetail(route.params.slug).then(res => setRecipe(res));
+      loadRecipeDetail(route.params.slug);
     }
-  }, [route.params.slug]);
+  }, [route.params.slug, loadRecipeDetail]);
 
-  if (!recipe) {
+  if (isLoading) {
     return (
       <View style={style.loadingContainer}>
         <ActivityIndicator size={'large'} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={style.loadingContainer}>
+        <Pressable>
+          <Text>An error occured. retry?</Text>
+        </Pressable>
       </View>
     );
   }
@@ -42,12 +67,12 @@ const RecipeDetail = ({route}: Props): JSX.Element => {
     <View style={style.container}>
       <Image
         source={{
-          uri: `${recipe.image.src}&width=${screenWidth}&height=${screenWidth}`,
+          uri: `${recipe?.image.src}&width=${screenWidth}&height=${screenWidth}`,
         }}
         style={style.image}
       />
-      <Text style={style.title}>{recipe.title}</Text>
-      <Text style={style.description}>{recipe.description}</Text>
+      <Text style={style.title}>{recipe?.title}</Text>
+      <Text style={style.description}>{recipe?.description}</Text>
     </View>
   );
 };
