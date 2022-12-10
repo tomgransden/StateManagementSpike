@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   FlatList,
   Text,
@@ -10,6 +10,8 @@ import {
   StyleSheet,
   ImageStyle,
   TextStyle,
+  ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import {getPublicRecipes} from '../api/publicRecipes.';
 import {PublicRecipeSearchResult} from '../types/publicRecipeTypes';
@@ -18,6 +20,7 @@ import type {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigationTypes';
+import {useQuery} from '@tanstack/react-query';
 
 type RecipeListProps = NativeStackScreenProps<
   RootStackParamList,
@@ -46,18 +49,33 @@ const renderItem = (
 );
 
 const RecipeList = ({navigation}: RecipeListProps) => {
-  const [recipes, setRecipes] = useState<PublicRecipeSearchResult[]>([]);
+  const {data, isLoading, refetch, isError} = useQuery({
+    queryKey: ['publicRecipes'],
+    queryFn: getPublicRecipes,
+  });
 
-  useEffect(() => {
-    getPublicRecipes().then(res => {
-      setRecipes(res);
-    });
-  }, []);
+  if (isLoading) {
+    return (
+      <View style={style.loadingContainer}>
+        <ActivityIndicator size={'large'} />
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <View style={style.loadingContainer}>
+        <Pressable onPress={() => refetch()}>
+          <Text>An error occured, reload?</Text>
+        </Pressable>
+      </View>
+    );
+  }
 
   return (
     <FlatList
       style={style.container}
-      data={recipes}
+      data={data}
       renderItem={({item}) => renderItem(item, navigation)}
     />
   );
@@ -69,6 +87,7 @@ type RecipeListStyle = {
   image: ImageStyle;
   textContainer: ViewStyle;
   text: TextStyle;
+  loadingContainer: ViewStyle;
 };
 
 const style = StyleSheet.create<RecipeListStyle>({
@@ -86,6 +105,11 @@ const style = StyleSheet.create<RecipeListStyle>({
     paddingHorizontal: 12,
   },
   text: {color: '#fffefe', textAlign: 'center', fontSize: 24},
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default RecipeList;
