@@ -25,19 +25,16 @@ const RecipeDetail = ({route}: Props): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
-  const loadRecipeDetail = useCallback(
-    (slug: string) => {
-      getPublicRecipeDetail(slug)
-        .then(res => {
-          setRecipe(res);
-        })
-        .catch(() => setError(true))
-        .finally(() => {
-          setIsLoading(false);
-        });
-    },
-    [getPublicRecipeDetail],
-  );
+  const loadRecipeDetail = useCallback((slug: string) => {
+    getPublicRecipeDetail(slug)
+      .then(res => {
+        setRecipe(res);
+      })
+      .catch(() => setError(true))
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     if (route.params.slug) {
@@ -56,7 +53,10 @@ const RecipeDetail = ({route}: Props): JSX.Element => {
   if (error) {
     return (
       <View style={style.loadingContainer}>
-        <Pressable>
+        <Pressable
+          onPress={() => {
+            loadRecipeDetail(route.params.slug);
+          }}>
           <Text>An error occured. retry?</Text>
         </Pressable>
       </View>

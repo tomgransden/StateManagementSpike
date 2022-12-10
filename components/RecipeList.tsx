@@ -63,7 +63,7 @@ const RecipeList = ({navigation}: RecipeListProps) => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [getPublicRecipes]);
+  }, []);
 
   useEffect(() => {
     loadRecipes();
