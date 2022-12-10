@@ -18,9 +18,12 @@ import {RootStackParamList} from '../types/navigationTypes';
 
 const screenWidth = Dimensions.get('screen').width;
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Recipe Detail'>;
+type RecipeDetailProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Recipe Detail'
+>;
 
-const RecipeDetail = ({route}: Props): JSX.Element => {
+const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
   const [recipe, setRecipe] = useState<PublicRecipeDetailed | null>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
