@@ -14,9 +14,14 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import RecipeList from './components/RecipeList';
 import RecipeDetail from './components/RecipeDetail';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  'Slimming World Recipes': undefined;
+  'Recipe Detail': {slug: string};
+};
 
-const App = () => (
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const App = (): JSX.Element => (
   <NavigationContainer>
     <Stack.Navigator
       screenOptions={{
