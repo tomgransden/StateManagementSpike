@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
-import {getPublicRecipes} from '../api/publicRecipes.';
+import {getPublicRecipes} from '../api/publicRecipes';
 import {PublicRecipeSearchResult} from '../types/publicRecipeTypes';
 import type {
   NativeStackNavigationProp,
