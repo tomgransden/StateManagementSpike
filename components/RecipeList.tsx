@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
-import {getPublicRecipes} from '../api/publicRecipes.';
+import {getPublicRecipes} from '../api/publicRecipes';
 import {PublicRecipeSearchResult} from '../types/publicRecipeTypes';
 import type {
   NativeStackNavigationProp,
@@ -66,7 +66,7 @@ const RecipeList = ({navigation}: RecipeListProps) => {
     return (
       <View style={style.loadingContainer}>
         <Pressable onPress={() => refetch()}>
-          <Text>An error occured, reload?</Text>
+          <Text>An error occured. retry?</Text>
         </Pressable>
       </View>
     );

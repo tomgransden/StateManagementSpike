@@ -11,7 +11,7 @@ import {
   TextStyle,
   Pressable,
 } from 'react-native';
-import {getPublicRecipeDetail} from '../api/publicRecipes.';
+import {getPublicRecipeDetail} from '../api/publicRecipes';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigationTypes';
 import {useQuery} from '@tanstack/react-query';
