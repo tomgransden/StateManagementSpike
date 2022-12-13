@@ -85,7 +85,7 @@ const RecipeList = ({navigation}: RecipeListProps) => {
             setError(false);
             loadRecipes();
           }}>
-          <Text>An error occured. retry</Text>
+          <Text>An error occured. retry?</Text>
         </Pressable>
       </View>
     );
