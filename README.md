@@ -10,6 +10,8 @@ OR
 
 `cd ios && bundle install && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install`
 
+`npx react-native run-ios`
+
 ## Help
 
 The versions of tools I have installed are:
