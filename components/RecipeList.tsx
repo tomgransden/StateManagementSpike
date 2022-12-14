@@ -54,6 +54,16 @@ const RecipeList = ({navigation}: RecipeListProps) => {
     queryFn: getPublicRecipes,
   });
 
+  if (data) {
+    return (
+      <FlatList
+        style={style.container}
+        data={data}
+        renderItem={({item}) => renderItem(item, navigation)}
+      />
+    );
+  }
+
   if (isLoading) {
     return (
       <View style={style.loadingContainer}>
@@ -71,14 +81,6 @@ const RecipeList = ({navigation}: RecipeListProps) => {
       </View>
     );
   }
-
-  return (
-    <FlatList
-      style={style.container}
-      data={data}
-      renderItem={({item}) => renderItem(item, navigation)}
-    />
-  );
 };
 
 type RecipeListStyle = {
