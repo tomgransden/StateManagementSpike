@@ -58,6 +58,7 @@ const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
       <View style={style.loadingContainer}>
         <Pressable
           onPress={() => {
+            setError(false);
             loadRecipeDetail(route.params.slug);
           }}>
           <Text>An error occured. retry?</Text>
