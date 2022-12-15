@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React from 'react';
 import {
   ActivityIndicator,
   View,
@@ -12,38 +12,19 @@ import {
   Pressable,
 } from 'react-native';
 import {getPublicRecipeDetail} from '../api/publicRecipes';
-import {PublicRecipeDetailed} from '../types/publicRecipeTypes';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigationTypes';
+import {useQuery} from '@tanstack/react-query';
 
 const screenWidth = Dimensions.get('screen').width;
 
-type RecipeDetailProps = NativeStackScreenProps<
-  RootStackParamList,
-  'Recipe Detail'
->;
+type Props = NativeStackScreenProps<RootStackParamList, 'Recipe Detail'>;
 
-const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
-  const [recipe, setRecipe] = useState<PublicRecipeDetailed | null>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-
-  const loadRecipeDetail = useCallback((slug: string) => {
-    getPublicRecipeDetail(slug)
-      .then(res => {
-        setRecipe(res);
-      })
-      .catch(() => setError(true))
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (route.params.slug) {
-      loadRecipeDetail(route.params.slug);
-    }
-  }, [route.params.slug, loadRecipeDetail]);
+const RecipeDetail = ({route}: Props): JSX.Element => {
+  const {data, isLoading, isError, refetch} = useQuery({
+    queryKey: ['publicRecipe', route.params.slug],
+    queryFn: getPublicRecipeDetail,
+  });
 
   if (isLoading) {
     return (
@@ -53,15 +34,11 @@ const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <View style={style.loadingContainer}>
-        <Pressable
-          onPress={() => {
-            setError(false);
-            loadRecipeDetail(route.params.slug);
-          }}>
-          <Text>An error occured. retry?</Text>
+        <Pressable onPress={() => refetch()}>
+          <Text>An error occured, retry?</Text>
         </Pressable>
       </View>
     );
@@ -71,12 +48,12 @@ const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
     <View style={style.container}>
       <Image
         source={{
-          uri: `${recipe?.image.src}&width=${screenWidth}&height=${screenWidth}`,
+          uri: `${data.image.src}&width=${screenWidth}&height=${screenWidth}`,
         }}
         style={style.image}
       />
-      <Text style={style.title}>{recipe?.title}</Text>
-      <Text style={style.description}>{recipe?.description}</Text>
+      <Text style={style.title}>{data.title}</Text>
+      <Text style={style.description}>{data.description}</Text>
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import {QueryFunctionContext} from '@tanstack/react-query';
 import {
   PublicRecipeDetailed,
   PublicRecipeSearchResult,
@@ -24,9 +24,10 @@ export const getPublicRecipes = (): Promise<PublicRecipeSearchResult[]> => {
     .then(res => res.data.data);
 };
 
-export const getPublicRecipeDetail = (
-  slug: string,
-): Promise<PublicRecipeDetailed> => {
+export const getPublicRecipeDetail = ({
+  queryKey,
+}: QueryFunctionContext<[string, string]>): Promise<PublicRecipeDetailed> => {
+  const [, slug] = queryKey;
   if (Math.random() > 0.5) {
     return Promise.reject('Mock error');
   }

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React from 'react';
 import {
   FlatList,
   Text,
@@ -20,6 +20,7 @@ import type {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigationTypes';
+import {useQuery} from '@tanstack/react-query';
 
 type RecipeListProps = NativeStackScreenProps<
   RootStackParamList,
@@ -48,26 +49,20 @@ const renderItem = (
 );
 
 const RecipeList = ({navigation}: RecipeListProps) => {
-  const [recipes, setRecipes] = useState<PublicRecipeSearchResult[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
+  const {data, isLoading, refetch, isError} = useQuery({
+    queryKey: ['publicRecipes'],
+    queryFn: getPublicRecipes,
+  });
 
-  const loadRecipes = useCallback(() => {
-    getPublicRecipes()
-      .then(res => {
-        setRecipes(res);
-      })
-      .catch(() => {
-        setError(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    loadRecipes();
-  }, [loadRecipes]);
+  if (data) {
+    return (
+      <FlatList
+        style={style.container}
+        data={data}
+        renderItem={({item}) => renderItem(item, navigation)}
+      />
+    );
+  }
 
   if (isLoading) {
     return (
@@ -77,27 +72,15 @@ const RecipeList = ({navigation}: RecipeListProps) => {
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <View style={style.loadingContainer}>
-        <Pressable
-          onPress={() => {
-            setError(false);
-            loadRecipes();
-          }}>
+        <Pressable onPress={() => refetch()}>
           <Text>An error occured. retry?</Text>
         </Pressable>
       </View>
     );
   }
-
-  return (
-    <FlatList
-      style={style.container}
-      data={recipes}
-      renderItem={({item}) => renderItem(item, navigation)}
-    />
-  );
 };
 
 type RecipeListStyle = {
