@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect} from 'react';
 import {
   ActivityIndicator,
   View,
@@ -11,10 +11,9 @@ import {
   TextStyle,
   Pressable,
 } from 'react-native';
-import {getPublicRecipeDetail} from '../api/publicRecipes';
-import {PublicRecipeDetailed} from '../types/publicRecipeTypes';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigationTypes';
+import useRecepiesStore from '../store/zustand';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -24,26 +23,14 @@ type RecipeDetailProps = NativeStackScreenProps<
 >;
 
 const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
-  const [recipe, setRecipe] = useState<PublicRecipeDetailed | null>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-
-  const loadRecipeDetail = useCallback((slug: string) => {
-    getPublicRecipeDetail(slug)
-      .then(res => {
-        setRecipe(res);
-      })
-      .catch(() => setError(true))
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  const {fetchRecepieDetails, recepieDetails, isLoading, error, setError} =
+    useRecepiesStore(state => state);
 
   useEffect(() => {
     if (route.params.slug) {
-      loadRecipeDetail(route.params.slug);
+      fetchRecepieDetails(route.params.slug);
     }
-  }, [route.params.slug, loadRecipeDetail]);
+  }, [route.params.slug, fetchRecepieDetails]);
 
   if (isLoading) {
     return (
@@ -59,7 +46,7 @@ const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
         <Pressable
           onPress={() => {
             setError(false);
-            loadRecipeDetail(route.params.slug);
+            fetchRecepieDetails(route.params.slug);
           }}>
           <Text>An error occured. retry?</Text>
         </Pressable>
@@ -71,12 +58,12 @@ const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
     <View style={style.container}>
       <Image
         source={{
-          uri: `${recipe?.image.src}&width=${screenWidth}&height=${screenWidth}`,
+          uri: `${recepieDetails?.image?.src}&width=${screenWidth}&height=${screenWidth}`,
         }}
         style={style.image}
       />
-      <Text style={style.title}>{recipe?.title}</Text>
-      <Text style={style.description}>{recipe?.description}</Text>
+      <Text style={style.title}>{recepieDetails?.title}</Text>
+      <Text style={style.description}>{recepieDetails?.description}</Text>
     </View>
   );
 };
