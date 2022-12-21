@@ -48,8 +48,13 @@ const renderItem = (
 );
 
 const RecipeList = ({navigation}: RecipeListProps) => {
-  const {fetchRecepiesAll, recepiesAll, isLoading, error, setError} =
-    useRecepiesStore(state => state);
+  const {
+    fetchRecepiesAll,
+    recepiesAll,
+    isLoading,
+    errorFetchingRecepies,
+    setErrorFetchingRecepies,
+  } = useRecepiesStore(state => state);
 
   useEffect(() => {
     fetchRecepiesAll();
@@ -63,12 +68,12 @@ const RecipeList = ({navigation}: RecipeListProps) => {
     );
   }
 
-  if (error) {
+  if (errorFetchingRecepies) {
     return (
       <View style={style.loadingContainer}>
         <Pressable
           onPress={() => {
-            setError(false);
+            setErrorFetchingRecepies(false);
             fetchRecepiesAll();
           }}>
           <Text>An error occured. retry?</Text>

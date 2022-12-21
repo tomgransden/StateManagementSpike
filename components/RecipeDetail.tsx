@@ -23,8 +23,13 @@ type RecipeDetailProps = NativeStackScreenProps<
 >;
 
 const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
-  const {fetchRecepieDetails, recepieDetails, isLoading, error, setError} =
-    useRecepiesStore(state => state);
+  const {
+    fetchRecepieDetails,
+    recepieDetails,
+    isLoading,
+    setErrorFetchingRecepieDetail,
+    errorFetchingRecepieDetail,
+  } = useRecepiesStore(state => state);
 
   useEffect(() => {
     if (route.params.slug) {
@@ -40,12 +45,12 @@ const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
     );
   }
 
-  if (error) {
+  if (errorFetchingRecepieDetail) {
     return (
       <View style={style.loadingContainer}>
         <Pressable
           onPress={() => {
-            setError(false);
+            setErrorFetchingRecepieDetail(false);
             fetchRecepieDetails(route.params.slug);
           }}>
           <Text>An error occured. retry?</Text>
