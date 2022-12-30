@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React from 'react';
 import {
   FlatList,
   Text,
@@ -13,8 +13,9 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
-import {getPublicRecipes} from '../api/publicRecipes';
+
 import {PublicRecipeSearchResult} from '../types/publicRecipeTypes';
+import {useGetRecepieListQuery} from '../services/recepieApi';
 import type {
   NativeStackNavigationProp,
   NativeStackScreenProps,
@@ -48,26 +49,9 @@ const renderItem = (
 );
 
 const RecipeList = ({navigation}: RecipeListProps) => {
-  const [recipes, setRecipes] = useState<PublicRecipeSearchResult[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-
-  const loadRecipes = useCallback(() => {
-    getPublicRecipes()
-      .then(res => {
-        setRecipes(res);
-      })
-      .catch(() => {
-        setError(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    loadRecipes();
-  }, [loadRecipes]);
+  const {data, error, isLoading} = useGetRecepieListQuery(
+    'search?limit=12&offset=0',
+  );
 
   if (isLoading) {
     return (
@@ -82,8 +66,8 @@ const RecipeList = ({navigation}: RecipeListProps) => {
       <View style={style.loadingContainer}>
         <Pressable
           onPress={() => {
-            setError(false);
-            loadRecipes();
+            // setError(false);
+            // loadRecipes();
           }}>
           <Text>An error occured. retry?</Text>
         </Pressable>
@@ -94,7 +78,7 @@ const RecipeList = ({navigation}: RecipeListProps) => {
   return (
     <FlatList
       style={style.container}
-      data={recipes}
+      data={data?.data}
       renderItem={({item}) => renderItem(item, navigation)}
     />
   );
