@@ -21,6 +21,8 @@ import type {
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigationTypes';
 
+import useSWR from 'swr'
+
 type RecipeListProps = NativeStackScreenProps<
   RootStackParamList,
   'Slimming World Recipes'
@@ -48,26 +50,29 @@ const renderItem = (
 );
 
 const RecipeList = ({navigation}: RecipeListProps) => {
-  const [recipes, setRecipes] = useState<PublicRecipeSearchResult[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
+  // const [recipes, setRecipes] = useState<PublicRecipeSearchResult[]>([]);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<boolean>(false);
 
-  const loadRecipes = useCallback(() => {
-    getPublicRecipes()
-      .then(res => {
-        setRecipes(res);
-      })
-      .catch(() => {
-        setError(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  // const loadRecipes = useCallback(() => {
+  //   getPublicRecipes()
+  //     .then(res => {
+  //       setRecipes(res);
+  //     })
+  //     .catch(() => {
+  //       setError(true);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // }, []);
 
-  useEffect(() => {
-    loadRecipes();
-  }, [loadRecipes]);
+  // useEffect(() => {
+  //   loadRecipes();
+  // }, [loadRecipes]);
+
+
+  const {data: recipes, error, isLoading} = useSWR('https://content.slimmingworld.co.uk/api/v2/public-recipes/search?limit=12&offset=0', getPublicRecipes)
 
   if (isLoading) {
     return (
@@ -82,8 +87,8 @@ const RecipeList = ({navigation}: RecipeListProps) => {
       <View style={style.loadingContainer}>
         <Pressable
           onPress={() => {
-            setError(false);
-            loadRecipes();
+            // setError(false);
+            // loadRecipes();
           }}>
           <Text>An error occured. retry?</Text>
         </Pressable>

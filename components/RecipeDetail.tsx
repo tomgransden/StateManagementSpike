@@ -16,6 +16,8 @@ import {PublicRecipeDetailed} from '../types/publicRecipeTypes';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigationTypes';
 
+import useSWR from 'swr'
+
 const screenWidth = Dimensions.get('screen').width;
 
 type RecipeDetailProps = NativeStackScreenProps<
@@ -24,26 +26,37 @@ type RecipeDetailProps = NativeStackScreenProps<
 >;
 
 const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
-  const [recipe, setRecipe] = useState<PublicRecipeDetailed | null>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
+  // const [recipe, setRecipe] = useState<PublicRecipeDetailed | null>();
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<boolean>(false);
 
-  const loadRecipeDetail = useCallback((slug: string) => {
-    getPublicRecipeDetail(slug)
-      .then(res => {
-        setRecipe(res);
-      })
-      .catch(() => setError(true))
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  // const loadRecipeDetail = useCallback((slug: string) => {
+  //   getPublicRecipeDetail(slug)
+  //     .then(res => {
+  //       setRecipe(res);
+  //     })
+  //     .catch(() => setError(true))
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // }, []);
 
-  useEffect(() => {
-    if (route.params.slug) {
-      loadRecipeDetail(route.params.slug);
+  // useEffect(() => {
+  //   if (route.params.slug) {
+  //     loadRecipeDetail(route.params.slug);
+  //   }
+  // }, [route.params.slug, loadRecipeDetail]);
+
+  const loadRecipeDetail = (slug: string) => {
+    const {data, isLoading, error} = useSWR(slug, getPublicRecipeDetail)
+    return {
+      recipe: data,
+      isLoading,
+      error
     }
-  }, [route.params.slug, loadRecipeDetail]);
+  }
+
+  const {recipe, isLoading, error} = loadRecipeDetail(route.params.slug)
 
   if (isLoading) {
     return (
@@ -58,8 +71,8 @@ const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
       <View style={style.loadingContainer}>
         <Pressable
           onPress={() => {
-            setError(false);
-            loadRecipeDetail(route.params.slug);
+            // setError(false);
+            // loadRecipeDetail(route.params.slug);
           }}>
           <Text>An error occured. retry?</Text>
         </Pressable>
