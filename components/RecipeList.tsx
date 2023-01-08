@@ -50,29 +50,9 @@ const renderItem = (
 );
 
 const RecipeList = ({navigation}: RecipeListProps) => {
-  // const [recipes, setRecipes] = useState<PublicRecipeSearchResult[]>([]);
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<boolean>(false);
-
-  // const loadRecipes = useCallback(() => {
-  //   getPublicRecipes()
-  //     .then(res => {
-  //       setRecipes(res);
-  //     })
-  //     .catch(() => {
-  //       setError(true);
-  //     })
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   loadRecipes();
-  // }, [loadRecipes]);
-
-
-  const {data: recipes, error, isLoading} = useSWR('https://content.slimmingworld.co.uk/api/v2/public-recipes/search?limit=12&offset=0', getPublicRecipes)
+  
+  //SWR: recipe list data fetch
+  const {data: recipes, error, isLoading, mutate} = useSWR('https://content.slimmingworld.co.uk/api/v2/public-recipes/search?limit=12&offset=0', getPublicRecipes)
 
   if (isLoading) {
     return (
@@ -87,8 +67,8 @@ const RecipeList = ({navigation}: RecipeListProps) => {
       <View style={style.loadingContainer}>
         <Pressable
           onPress={() => {
-            // setError(false);
-            // loadRecipes();
+            //SWR: manual revalidation of cached data
+            mutate()
           }}>
           <Text>An error occured. retry?</Text>
         </Pressable>
