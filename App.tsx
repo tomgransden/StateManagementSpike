@@ -14,22 +14,25 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import RecipeList from './components/RecipeList';
 import RecipeDetail from './components/RecipeDetail';
 import {RootStackParamList} from './types/navigationTypes';
+import {RecoilRoot} from 'recoil';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = (): JSX.Element => (
-  <NavigationContainer>
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: '#d3072a',
-        },
-        headerTintColor: '#fffefe',
-      }}>
-      <Stack.Screen name="Slimming World Recipes" component={RecipeList} />
-      <Stack.Screen name="Recipe Detail" component={RecipeDetail} />
-    </Stack.Navigator>
-  </NavigationContainer>
+  <RecoilRoot>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#d3072a',
+          },
+          headerTintColor: '#fffefe',
+        }}>
+        <Stack.Screen name="Slimming World Recipes" component={RecipeList} />
+        <Stack.Screen name="Recipe Detail" component={RecipeDetail} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  </RecoilRoot>
 );
 
 export default App;

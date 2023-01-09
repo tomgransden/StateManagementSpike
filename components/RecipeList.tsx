@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useMemo} from 'react';
 import {
   FlatList,
   Text,
@@ -20,6 +20,12 @@ import type {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigationTypes';
+import {
+  selector,
+  useRecoilCallback,
+  useRecoilSnapshot,
+  useRecoilValueLoadable,
+} from 'recoil';
 
 type RecipeListProps = NativeStackScreenProps<
   RootStackParamList,
@@ -47,29 +53,47 @@ const renderItem = (
   </TouchableOpacity>
 );
 
+const recipesSelector = selector({
+  key: 'recipesSelector',
+  get: async () => {
+    return await getPublicRecipes().then(data => data);
+  },
+});
+
+function QueryErrorMessage() {
+  const snapshot = useRecoilSnapshot();
+  const selectors = useMemo(() => {
+    const ret = [];
+    for (const node of snapshot.getNodes_UNSTABLE({isInitialized: true})) {
+      const {loadable} = snapshot.getInfo_UNSTABLE(node);
+      if (loadable != null && loadable.state === 'hasError') {
+        ret.push(node);
+      }
+    }
+    return ret;
+  }, [snapshot]);
+  const retry = useRecoilCallback(
+    ({refresh}) =>
+      () =>
+        selectors.forEach(refresh),
+    [selectors],
+  );
+
+  return selectors.length > 0 ? (
+    <View>
+      <Text>Error</Text>
+      <Text>Query: {selectors[0].key}</Text>
+      <Pressable onPress={retry}>
+        <Text>Retry</Text>
+      </Pressable>
+    </View>
+  ) : null;
+}
+
 const RecipeList = ({navigation}: RecipeListProps) => {
-  const [recipes, setRecipes] = useState<PublicRecipeSearchResult[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
+  const recipesState = useRecoilValueLoadable(recipesSelector);
 
-  const loadRecipes = useCallback(() => {
-    getPublicRecipes()
-      .then(res => {
-        setRecipes(res);
-      })
-      .catch(() => {
-        setError(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    loadRecipes();
-  }, [loadRecipes]);
-
-  if (isLoading) {
+  if (recipesState.state === 'loading') {
     return (
       <View style={style.loadingContainer}>
         <ActivityIndicator size={'large'} />
@@ -77,24 +101,14 @@ const RecipeList = ({navigation}: RecipeListProps) => {
     );
   }
 
-  if (error) {
-    return (
-      <View style={style.loadingContainer}>
-        <Pressable
-          onPress={() => {
-            setError(false);
-            loadRecipes();
-          }}>
-          <Text>An error occured. retry?</Text>
-        </Pressable>
-      </View>
-    );
+  if (recipesState.state === 'hasError') {
+    return <QueryErrorMessage />;
   }
 
   return (
     <FlatList
       style={style.container}
-      data={recipes}
+      data={recipesState.contents}
       renderItem={({item}) => renderItem(item, navigation)}
     />
   );
