@@ -14,9 +14,6 @@ type IndividualRecipeResult = {
 };
 
 export const getPublicRecipes = (): Promise<PublicRecipeSearchResult[]> => {
-  if (Math.random() > 0.5) {
-    return Promise.reject('Mock error');
-  }
   return axios
     .get<GetAllRecipesResult>(
       'https://content.slimmingworld.co.uk/api/v2/public-recipes/search?limit=12&offset=0',
@@ -27,9 +24,6 @@ export const getPublicRecipes = (): Promise<PublicRecipeSearchResult[]> => {
 export const getPublicRecipeDetail = (
   slug: string,
 ): Promise<PublicRecipeDetailed> => {
-  if (Math.random() > 0.5) {
-    return Promise.reject('Mock error');
-  }
   return axios
     .get<IndividualRecipeResult>(
       `https://content.slimmingworld.co.uk/api/v2/public-${slug.substring(1)}`,
