@@ -15,7 +15,10 @@ import {RootStackParamList} from '../types/navigationTypes';
 import RecipeTile from './RecipeTile';
 import {useNavigation} from '@react-navigation/native';
 
-type RecipeListNavigator = NativeStackNavigationProp<RootStackParamList>;
+type RecipeListNavigator = NativeStackNavigationProp<
+  RootStackParamList,
+  'Slimming World Recipes'
+>;
 
 const RecipeList = () => {
   const [recipes, setRecipes] = useState<PublicRecipeSearchResult[]>([]);

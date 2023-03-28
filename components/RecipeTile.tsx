@@ -53,7 +53,11 @@ const style = StyleSheet.create<RecipeTileStyle>({
     justifyContent: 'center',
     paddingHorizontal: 12,
   },
-  text: {color: '#fffefe', textAlign: 'center', fontSize: 24},
+  text: {
+    color: '#fffefe',
+    textAlign: 'center',
+    fontSize: 24,
+  },
 });
 
 export default RecipeTile;

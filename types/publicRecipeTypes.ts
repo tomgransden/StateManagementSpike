@@ -63,11 +63,11 @@ export type PublicRecipeDetailed = {
   synsType: string;
   healthyExtras: string[];
   freeFoods: FreeFood[];
-  videoFeature: null;
-  videoDescription: null;
-  privateVideoId: null;
-  publicVideoId: null;
-  contentGroup: null;
+  videoFeature: number;
+  videoDescription: string;
+  privateVideoId: number;
+  publicVideoId: number;
+  contentGroup: number;
   recipeId: string;
   additionalTimeInMinutes: number;
   additionalTimeSuffix: string;
