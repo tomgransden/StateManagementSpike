@@ -17,7 +17,7 @@ import {RootStackParamList} from './types/navigationTypes';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const App = (): JSX.Element => (
+const App = () => (
   <NavigationContainer>
     <Stack.Navigator
       screenOptions={{

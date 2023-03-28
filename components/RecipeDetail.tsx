@@ -23,8 +23,8 @@ type RecipeDetailProps = NativeStackScreenProps<
   'Recipe Detail'
 >;
 
-const RecipeDetail = ({route}: RecipeDetailProps): JSX.Element => {
-  const [recipe, setRecipe] = useState<PublicRecipeDetailed | null>();
+const RecipeDetail = ({route}: RecipeDetailProps) => {
+  const [recipe, setRecipe] = useState<PublicRecipeDetailed | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
