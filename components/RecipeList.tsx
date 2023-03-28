@@ -2,35 +2,27 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Text,
-  Image,
-  Dimensions,
-  TouchableOpacity,
   View,
   ViewStyle,
   StyleSheet,
-  ImageStyle,
-  TextStyle,
   ActivityIndicator,
   Pressable,
 } from 'react-native';
 import {getPublicRecipes} from '../api/publicRecipes';
 import {PublicRecipeSearchResult} from '../types/publicRecipeTypes';
-import type {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigationTypes';
 import RecipeTile from './RecipeTile';
+import {useNavigation} from '@react-navigation/native';
 
-type RecipeListProps = NativeStackScreenProps<
-  RootStackParamList,
-  'Slimming World Recipes'
->;
+type RecipeListNavigator = NativeStackNavigationProp<RootStackParamList>;
 
-const RecipeList = ({navigation}: RecipeListProps) => {
+const RecipeList = () => {
   const [recipes, setRecipes] = useState<PublicRecipeSearchResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
+
+  const {navigate} = useNavigation<RecipeListNavigator>();
 
   const loadRecipes = useCallback(() => {
     getPublicRecipes()
@@ -75,11 +67,12 @@ const RecipeList = ({navigation}: RecipeListProps) => {
     <FlatList
       style={style.container}
       data={recipes}
+      initialNumToRender={12}
       renderItem={({item}) => (
         <RecipeTile
           item={item}
           onPress={() => {
-            navigation.navigate('Recipe Detail', {slug: item.link});
+            navigate('Recipe Detail', {slug: item.link});
           }}
         />
       )}

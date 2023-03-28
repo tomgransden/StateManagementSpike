@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecipeTile Should render correctly 1`] = `
+<View
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "height": 750,
+      "opacity": 1,
+    }
+  }
+>
+  <Image
+    source={
+      Object {
+        "uri": "https://asset.slimmingworld.co.uk/content/media/16967/spaghetti-and-meatballs_sw_recipe.jpg?v1=JGXiore20qg9NNIj0tmc3TKfKw-jr0s127JqqpCA2x7sMviNgcAYh1epuS_Lqxebn9V_qusKHfwbF7MOUrAPptzBhXIUL1Xnq2Mmdvx4fOk&width=750&height=750",
+      }
+    }
+    style={
+      Object {
+        "height": 750,
+        "width": 750,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(0,0,0,0.7)",
+        "bottom": 30,
+        "justifyContent": "center",
+        "left": 0,
+        "minHeight": 60,
+        "paddingHorizontal": 12,
+        "position": "absolute",
+        "right": 0,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#fffefe",
+          "fontSize": 24,
+          "textAlign": "center",
+        }
+      }
+    >
+      Spaghetti and meatballs
+    </Text>
+  </View>
+</View>
+`;

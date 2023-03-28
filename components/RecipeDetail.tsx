@@ -13,20 +13,18 @@ import {
 } from 'react-native';
 import {getPublicRecipeDetail} from '../api/publicRecipes';
 import {PublicRecipeDetailed} from '../types/publicRecipeTypes';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types/navigationTypes';
+import {RouteProp, useRoute} from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('screen').width;
 
-type RecipeDetailProps = NativeStackScreenProps<
-  RootStackParamList,
-  'Recipe Detail'
->;
+type RecipeDetailRouteProp = RouteProp<RootStackParamList, 'Recipe Detail'>;
 
-const RecipeDetail = ({route}: RecipeDetailProps) => {
+const RecipeDetail = () => {
   const [recipe, setRecipe] = useState<PublicRecipeDetailed | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
+  const route = useRoute<RecipeDetailRouteProp>();
 
   const loadRecipeDetail = useCallback((slug: string) => {
     getPublicRecipeDetail(slug)
